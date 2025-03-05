@@ -69,9 +69,6 @@ const knightMoves = (vertexA, vertexB) => {
   const visited = [];
   queue.push(vertexA);
 
-  let targetFound = false;
-  let counter = 0;
-
   while (queue.length) {
     const moveUpLeft = move.moveUpLeft(queue[0]);
     const moveUpRight = move.moveUpRight(queue[0]);
@@ -83,87 +80,85 @@ const knightMoves = (vertexA, vertexB) => {
     const moveLeftUp = move.moveLeftUp(queue[0]);
 
     if (moveUpLeft) {
-      if (move.isEqual(moveUpLeft, vertexB)) targetFound = true;
-      if (
-        !queue.toString().includes(moveUpLeft.toString()) &&
-        !visited.toString().includes(moveUpLeft.toString())
-      ) {
-        queue.push(moveUpLeft);
-      }
+      queue.push(moveUpLeft);
+      visited.push([queue[0], moveUpLeft]);
+      if (move.isEqual(moveUpLeft, vertexB)) break;
     }
     if (moveUpRight) {
-      if (move.isEqual(moveUpRight, vertexB)) targetFound = true;
-      if (
-        !queue.toString().includes(moveUpRight.toString()) &&
-        !visited.toString().includes(moveUpRight.toString())
-      ) {
-        queue.push(moveUpRight);
-      }
+      queue.push(moveUpRight);
+      visited.push([queue[0], moveUpRight]);
+      if (move.isEqual(moveUpRight, vertexB)) break;
     }
     if (moveRightUp) {
-      if (move.isEqual(moveRightUp, vertexB)) targetFound = true;
-      if (
-        !queue.toString().includes(moveRightUp.toString()) &&
-        !visited.toString().includes(moveRightUp.toString())
-      ) {
-        queue.push(moveRightUp);
-      }
+      queue.push(moveRightUp);
+      visited.push([queue[0], moveRightUp]);
+      if (move.isEqual(moveRightUp, vertexB)) break;
     }
     if (moveRightDown) {
-      if (move.isEqual(moveRightDown, vertexB)) targetFound = true;
-      if (
-        !queue.toString().includes(moveRightDown.toString()) &&
-        !visited.toString().includes(moveRightDown.toString())
-      ) {
-        queue.push(moveRightDown);
-      }
+      queue.push(moveRightDown);
+      visited.push([queue[0], moveRightDown]);
+      if (move.isEqual(moveRightDown, vertexB)) break;
     }
     if (moveDownRight) {
-      if (move.isEqual(moveDownRight, vertexB)) targetFound = true;
-      if (
-        !queue.toString().includes(moveDownRight.toString()) &&
-        !visited.toString().includes(moveDownRight.toString())
-      ) {
-        queue.push(moveDownRight);
-      }
+      queue.push(moveDownRight);
+      visited.push([queue[0], moveDownRight]);
+      if (move.isEqual(moveDownRight, vertexB)) break;
     }
     if (moveDownLeft) {
-      if (move.isEqual(moveDownLeft, vertexB)) targetFound = true;
-      if (
-        !queue.toString().includes(moveDownLeft.toString()) &&
-        !visited.toString().includes(moveDownLeft.toString())
-      ) {
-        queue.push(moveDownLeft);
-      }
+      queue.push(moveDownLeft);
+      visited.push([queue[0], moveDownLeft]);
+      if (move.isEqual(moveDownLeft, vertexB)) break;
     }
     if (moveLeftDown) {
-      if (move.isEqual(moveLeftDown, vertexB)) targetFound = true;
-      if (
-        !queue.toString().includes(moveLeftDown.toString()) &&
-        !visited.toString().includes(moveLeftDown.toString())
-      ) {
-        queue.push(moveLeftDown);
-      }
+      queue.push(moveLeftDown);
+      visited.push([queue[0], moveLeftDown]);
+      if (move.isEqual(moveLeftDown, vertexB)) break;
     }
     if (moveLeftUp) {
-      if (move.isEqual(moveLeftUp, vertexB)) targetFound = true;
-      if (
-        !queue.toString().includes(moveLeftUp.toString()) &&
-        !visited.toString().includes(moveLeftUp.toString())
-      ) {
-        queue.push(moveLeftUp);
-      }
+      queue.push(moveLeftUp);
+      visited.push([queue[0], moveLeftUp]);
+      if (move.isEqual(moveLeftUp, vertexB)) break;
     }
 
-    ++counter;
-    visited.push(queue.shift());
+    queue.shift();
   }
 
-  const message = `You made it in ${counter} moves! Here is your path:`;
+  const target = visited.filter(
+    (item) => item[1].toString() === vertexB.toString()
+  );
+
+  let pathComplete = false;
+  let counter = 0;
+
+  while (!pathComplete) {
+    if (target[counter][0].toString() === vertexA.toString()) break;
+
+    target.push(
+      visited.find(
+        (item) => target[counter][0].toString() === item[1].toString()
+      )
+    );
+
+    ++counter;
+  }
+
+  const path = target.map((item) => item[0]);
+  path.reverse().push(vertexB);
+
+  const message = `You made it in ${path.length - 1} moves! Here is your path:`;
 
   console.log(message);
-  // visited.forEach((vertex) => console.log(vertex));
-  console.log(visited);
+  path.forEach((vertex) => console.log(vertex));
 };
 
-knightMoves([3, 3], [4, 3]);
+knightMoves([0, 0], [7, 7]);
+
+// Logs:
+// You made it in 6 moves! Here is your path:
+// [ 0, 0 ]
+// [ 1, 2 ]
+// [ 0, 4 ]
+// [ 1, 6 ]
+// [ 3, 7 ]
+// [ 5, 6 ]
+// [ 7, 7 ]
